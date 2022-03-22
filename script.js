@@ -13,26 +13,30 @@ function writePassword() {
 
 // WHEN I click the button to generate a password
 // THEN I am presented with a series of prompts for password criteria
-var alphArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+var alphLower = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var alphUpper = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var numArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-var charArray = ['!', '@', '#', '$', '%', '^', '&', '*'];
+var symArray = ['!', '@', '#', '$', '%', '^', '&', '*'];
 
-var allChar = alphArray.concat(alphUpper, numArray, charArray);
-var charNoUpper = alphArray.concat(numArray, charArray);
-var charNoLower = alphUpper.concat(numArray, charArray);
-var charNoNum = alphArray.concat(alphUpper, charArray);
-var charNoSym = alphArray.concat(alphUpper, numArray);
-var charLowerNum = alphArray.concat(numArray)
-var charLowerSym = alphArray.concat(charArray)
+var allChar = alphLower.concat(alphUpper, numArray, symArray);
+var charNoUpper = alphLower.concat(numArray, symArray);
+var charNoLower = alphUpper.concat(numArray, symArray);
+var charNoNum = alphLower.concat(alphUpper, symArray);
+var charNoSym = alphLower.concat(alphUpper, numArray);
+var charLowerNum = alphLower.concat(numArray)
+var charLowerSym = alphLower.concat(symArray)
 var charUpperNum = alphUpper.concat(numArray)
-var charUpperSym = alphUpper.concat(charArray)
-var charLowerUpper =alphArray.concat(alphUpper)
+var charUpperSym = alphUpper.concat(symArray)
+var charLowerUpper =alphLower.concat(alphUpper)
 // value of how many characheters from password length will not be alphabetic characters.
 // var currentPassLength = 0
 // // Start with empty new password array, add characters later based on answers to prompts
 // var newPass =[];
 // var randPass = []
+
+var newPass = []
+var randPass = []
+var currentPassLength = 0
 
 function generatePassword() {
 
@@ -47,7 +51,9 @@ function generatePassword() {
 // THEN I choose a length of at least 8 characters and no more than 128 characters
   var passLen = parseInt(prompt("How long will your password be? (Choose a value 8 - 128)"));
   if (!(passLen <= 128 && passLen >= 8)) {
-    return alert("The the input for password length is not within requested length.");
+    alert("The the input for password length is not within requested length.");
+    newPass = [];
+    generatePassword();
     // break
   }
     // return passLen;
@@ -55,7 +61,12 @@ function generatePassword() {
 // WHEN asked for character types to include in the password
 // THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters 
   
-  
+  function chooseArray(array) {
+    for (i = 0; i < passLen - currentPassLength; i++) {
+      var randAlpha = Math.floor(Math.random() * array.length);
+      newPass.push(array[randAlpha]);
+    } 
+  } 
   
   
   // WHEN I answer each prompt
@@ -65,8 +76,8 @@ function generatePassword() {
 
   if (lower.toLowerCase()==="y") {
     currentPassLength = currentPassLength + 1;
-    var randLower = Math.floor(Math.random() * alphArray.length);
-    newPass.push(alphArray[randLower]);
+    var randLower = Math.floor(Math.random() * alphLower.length);
+    newPass.push(alphLower[randLower]);
   } else if (lower.toLowerCase() != "y" && lower.toLowerCase() != "n") {
     alert("Incorrect value for lower case prompt.")
   }
@@ -75,16 +86,12 @@ function generatePassword() {
 
   if (upper.toLowerCase()==="y") {
     currentPassLength = currentPassLength + 1;
-    var randUpper = Math.floor(Math.random() * alphArray.length);
-    newPass.push(alphArray[randUpper].toUpperCase());
+    var randUpper = Math.floor(Math.random() * alphLower.length);
+    newPass.push(alphLower[randUpper].toUpperCase());
   } else if (upper.toLowerCase() != "y" && upper.toLowerCase() != "n") {
     alert("Incorrect value for upper case prompt.")
   }
 
-  if (lower.toLowerCase() === 'n' && upper.toLowerCase() === 'n') {
-    alert("You must choose at least upper or lower case letters.");
-    // break;
-  }
 
   var numeric = prompt("Will your password have a number? (Y/N)");
 
@@ -101,29 +108,61 @@ function generatePassword() {
 
   if (specialChar.toLowerCase() === "y") {
     currentPassLength = currentPassLength + 1;
-    var randChar = Math.floor(Math.random() * charArray.length);
-    newPass.push(charArray[randChar]);
+    var randChar = Math.floor(Math.random() * symArray.length);
+    newPass.push(symArray[randChar]);
   } else if (specialChar.toLowerCase() != "y" && specialChar.toLowerCase() != "n") {
     alert("Incorrect value for special character prompt.")
   }
 
-  if (lower.toLowerCase() === "n") {
-    for (i = 0; i < passLen - currentPassLength; i++) {
-      var randAlpha = Math.floor(Math.random() * alphArray.length);
-      // console.log(randItem);
-      newPass.push(alphArray[randAlpha].toUpperCase());
-      // var newPass = newPass.push(alphArray[randAlpha]);
-      console.log(newPass);
-    }
+  if (lower.toLowerCase() === "y" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "y") {
+    chooseArray(allChar);
+  } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "n" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "y") {
+    chooseArray(charNoUpper);
+  } else if (lower.toLowerCase() === "n" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "y") {
+    chooseArray(charNoLower);
+  } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "n" && specialChar.toLowerCase() === "y") {
+    chooseArray(charNoNum);
+  } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "n") {
+    chooseArray(charNoSym);
+  } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "n" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "n") {
+    chooseArray(charLowerNum);
+  } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "n" && numeric.toLowerCase() === "n" && specialChar.toLowerCase() === "y") {
+    chooseArray(charLowerSym);
+  } else if (lower.toLowerCase() === "n" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "n") {
+    chooseArray(charUpperNum);
+  } else if (lower.toLowerCase() === "n" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "n" && specialChar.toLowerCase() === "y") {
+    chooseArray(charUpperSym);
+  } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "n" && specialChar.toLowerCase() === "n") {
+    chooseArray(charLowerUpper);
+  } else if (lower.toLowerCase() === 'n' && upper.toLowerCase() === 'n') {
+    alert("You must choose at least upper or lower case letters.");
+    newPass = [];
+    generatePassword();
+    // break;
   } else {
-    for (i = 0; i < passLen - currentPassLength; i++) {
-      var randAlpha = Math.floor(Math.random() * alphArray.length);
-      // console.log(randItem);
-      newPass.push(alphArray[randAlpha]);
-      // var newPass = newPass.push(alphArray[randAlpha]);
-      console.log(newPass);
-    }
+    alert("Incorrect value entered");
+    newPass = [];
+    generatePassword();
+    // break;
   }
+
+  // if (lower.toLowerCase() === "n") {
+  //   for (i = 0; i < passLen - currentPassLength; i++) {
+  //     var randAlpha = Math.floor(Math.random() * alphLower.length);
+  //     // console.log(randItem);
+  //     newPass.push(alphLower[randAlpha].toUpperCase());
+  //     // var newPass = newPass.push(alphLower[randAlpha]);
+  //     console.log(newPass);
+  //   }
+  // } else {
+  //   for (i = 0; i < passLen - currentPassLength; i++) {
+  //     var randAlpha = Math.floor(Math.random() * alphLower.length);
+  //     // console.log(randItem);
+  //     newPass.push(alphLower[randAlpha]);
+  //     // var newPass = newPass.push(alphLower[randAlpha]);
+  //     console.log(newPass);
+  //   }
+  // }
   
 // Once all password characters are established, the array items will be randomized into a new array.
 // for loop takes the length of the newPass array and subtracts 1 to account for 0 index and assigns that to the variable 'i'
@@ -149,7 +188,7 @@ function generatePassword() {
   
   // return passLen + passLen
 
-generatePassword()
+// generatePassword()
 // 15, 13, 11, 9, 7
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
