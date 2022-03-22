@@ -7,8 +7,6 @@ function writePassword() {
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
-  // passwordText.value = "fdsdfgdsfgsdfgsd";
-
 }
 
 // WHEN I click the button to generate a password
@@ -28,12 +26,8 @@ var charLowerSym = alphLower.concat(symArray)
 var charUpperNum = alphUpper.concat(numArray)
 var charUpperSym = alphUpper.concat(symArray)
 var charLowerUpper =alphLower.concat(alphUpper)
-// value of how many characheters from password length will not be alphabetic characters.
-// var currentPassLength = 0
-// // Start with empty new password array, add characters later based on answers to prompts
-// var newPass =[];
-// var randPass = []
 
+// // Start with empty new password array, add characters later based on answers to prompts
 var newPass = []
 var randPass = []
 var currentPassLength = 0
@@ -54,9 +48,7 @@ function generatePassword() {
     alert("The the input for password length is not within requested length.");
     newPass = [];
     generatePassword();
-    // break
   }
-    // return passLen;
   
 // WHEN asked for character types to include in the password
 // THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters 
@@ -67,7 +59,6 @@ function generatePassword() {
       newPass.push(array[randAlpha]);
     } 
   } 
-  
   
   // WHEN I answer each prompt
   // THEN my input should be validated and at least one character type should be selected
@@ -92,13 +83,11 @@ function generatePassword() {
     alert("Incorrect value for upper case prompt.")
   }
 
-
   var numeric = prompt("Will your password have a number? (Y/N)");
 
   if (numeric.toLowerCase() === "y") {
     currentPassLength = currentPassLength + 1;
     var randNum = Math.floor(Math.random() * numArray.length);
-    // console.log(randNum)
     newPass.push(numArray[randNum]);
   } else if (numeric.toLowerCase() != "y" && numeric.toLowerCase() != "n") {
     alert("Incorrect value for number prompt.")
@@ -135,34 +124,14 @@ function generatePassword() {
   } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "n" && specialChar.toLowerCase() === "n") {
     chooseArray(charLowerUpper);
   } else if (lower.toLowerCase() === 'n' && upper.toLowerCase() === 'n') {
-    alert("You must choose at least upper or lower case letters.");
+    alert("You must choose upper or lower case letters.");
     newPass = [];
     generatePassword();
-    // break;
   } else {
     alert("Incorrect value entered");
     newPass = [];
     generatePassword();
-    // break;
   }
-
-  // if (lower.toLowerCase() === "n") {
-  //   for (i = 0; i < passLen - currentPassLength; i++) {
-  //     var randAlpha = Math.floor(Math.random() * alphLower.length);
-  //     // console.log(randItem);
-  //     newPass.push(alphLower[randAlpha].toUpperCase());
-  //     // var newPass = newPass.push(alphLower[randAlpha]);
-  //     console.log(newPass);
-  //   }
-  // } else {
-  //   for (i = 0; i < passLen - currentPassLength; i++) {
-  //     var randAlpha = Math.floor(Math.random() * alphLower.length);
-  //     // console.log(randItem);
-  //     newPass.push(alphLower[randAlpha]);
-  //     // var newPass = newPass.push(alphLower[randAlpha]);
-  //     console.log(newPass);
-  //   }
-  // }
   
 // Once all password characters are established, the array items will be randomized into a new array.
 // for loop takes the length of the newPass array and subtracts 1 to account for 0 index and assigns that to the variable 'i'
@@ -177,19 +146,9 @@ function generatePassword() {
     randPass.push(randIndex[0]);
     
   }
-
   return randPass.join('');
-
-  
-  // console.log(randPass)
- 
-  
 }
   
-  // return passLen + passLen
-
-// generatePassword()
-// 15, 13, 11, 9, 7
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
 
