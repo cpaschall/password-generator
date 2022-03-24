@@ -1,5 +1,7 @@
-# password-generator
+# Password Generator
 
+## Objective
+The Password Generator will prompt the user for criteria of the password, starting with the length.  Character types will include lower and/or upper case letters, numbers and special characters.  The password must contain at least one letter, either upper or lower or possibly both but can not contain only numbers and special characters.
 
 
 ## Acceptance Criteria
@@ -21,3 +23,8 @@ THEN a password is generated that matches the selected criteria
 WHEN the password is generated
 THEN the password is either displayed in an alert or written to the page
 ```
+
+## Final Result
+[Password Generator](cpaschall.github.io/password-generator)
+
+![Main Page of my Code Portfolio](.\assets\images\pw-generator-final.png)

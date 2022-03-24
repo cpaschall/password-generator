@@ -9,13 +9,13 @@ function writePassword() {
   passwordText.value = password;
 }
 
-// WHEN I click the button to generate a password
-// THEN I am presented with a series of prompts for password criteria
+//  Creating 4 arrays, each with the chracter type that may appear in a random password
 var alphLower = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var alphUpper = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var numArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 var symArray = ['!', '@', '#', '$', '%', '^', '&', '*'];
 
+// Creating arrays for each possible combination of character type, except an array for only numbers and special chanracters
 var allChar = alphLower.concat(alphUpper, numArray, symArray);
 var charNoUpper = alphLower.concat(numArray, symArray);
 var charNoLower = alphUpper.concat(numArray, symArray);
@@ -25,34 +25,31 @@ var charLowerNum = alphLower.concat(numArray)
 var charLowerSym = alphLower.concat(symArray)
 var charUpperNum = alphUpper.concat(numArray)
 var charUpperSym = alphUpper.concat(symArray)
-var charLowerUpper =alphLower.concat(alphUpper)
+var charLowerUpper = alphLower.concat(alphUpper)
 
-// // Start with empty new password array, add characters later based on answers to prompts
+// Start with empty new password array, add characters later based on answers to prompts
 var newPass = []
 var randPass = []
 var currentPassLength = 0
 
 function generatePassword() {
 
-  // The newPass, and randPass arrays must be emptied and and current PasswordLength reset to 0 so a fresh password can be created when the Generate button is selected
+  // The newPass and randPass arrays must be emptied and and current PasswordLength reset to 0 so a fresh password can be created when the Generate button is selected
   var newPass = []
   var randPass = []
   var currentPassLength = 0
-// WHEN prompted for password criteria
-// THEN I select which criteria to include in the password
 
-// WHEN prompted for the length of the password
-// THEN I choose a length of at least 8 characters and no more than 128 characters
   var passLen = parseInt(prompt("How long will your password be? (Choose a value 8 - 128)"));
+  // create if statement for any value not equal or between 8-128.
   if (!(passLen <= 128 && passLen >= 8)) {
     alert("The the input for password length is not within requested length.");
     newPass = [];
-    generatePassword();
+    // generatePassword();
+    return;
   }
   
-// WHEN asked for character types to include in the password
-// THEN I confirm whether or not to include lowercase, uppercase, numeric, and/or special characters 
-  
+  // Create a function takes in an array as a parameter then pushes a random item from the array into the remaining length of the password
+  // Function will be used multiple times later to determine which combination of arrays linked to prompt answers is to be used when selecting a randoom password
   function chooseArray(array) {
     for (i = 0; i < passLen - currentPassLength; i++) {
       var randAlpha = Math.floor(Math.random() * array.length);
@@ -60,49 +57,47 @@ function generatePassword() {
     } 
   } 
   
-  // WHEN I answer each prompt
-  // THEN my input should be validated and at least one character type should be selected
-  
   var lower = prompt("Will your password have lower case letters? (Y/N)");
-
   if (lower.toLowerCase()==="y") {
     currentPassLength = currentPassLength + 1;
     var randLower = Math.floor(Math.random() * alphLower.length);
     newPass.push(alphLower[randLower]);
   } else if (lower.toLowerCase() != "y" && lower.toLowerCase() != "n") {
-    alert("Incorrect value for lower case prompt.")
+    alert("Incorrect value for lower case prompt.");
+    return
   }
 
   var upper = prompt("Will your password have upper case letters? (Y/N)");
-
   if (upper.toLowerCase()==="y") {
     currentPassLength = currentPassLength + 1;
     var randUpper = Math.floor(Math.random() * alphLower.length);
     newPass.push(alphLower[randUpper].toUpperCase());
   } else if (upper.toLowerCase() != "y" && upper.toLowerCase() != "n") {
     alert("Incorrect value for upper case prompt.")
+    return;
   }
 
   var numeric = prompt("Will your password have a number? (Y/N)");
-
   if (numeric.toLowerCase() === "y") {
     currentPassLength = currentPassLength + 1;
     var randNum = Math.floor(Math.random() * numArray.length);
     newPass.push(numArray[randNum]);
   } else if (numeric.toLowerCase() != "y" && numeric.toLowerCase() != "n") {
     alert("Incorrect value for number prompt.")
+    return;
   }
 
   var specialChar = prompt("Will your password have a special character? (Y/N)");
-
   if (specialChar.toLowerCase() === "y") {
     currentPassLength = currentPassLength + 1;
     var randChar = Math.floor(Math.random() * symArray.length);
     newPass.push(symArray[randChar]);
   } else if (specialChar.toLowerCase() != "y" && specialChar.toLowerCase() != "n") {
     alert("Incorrect value for special character prompt.")
+    return;
   }
 
+  // check combination of prompt answers to indicate which combo array is to be used in the password
   if (lower.toLowerCase() === "y" && upper.toLowerCase() === "y" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "y") {
     chooseArray(allChar);
   } else if (lower.toLowerCase() === "y" && upper.toLowerCase() === "n" && numeric.toLowerCase() === "y" && specialChar.toLowerCase() === "y") {
@@ -126,11 +121,11 @@ function generatePassword() {
   } else if (lower.toLowerCase() === 'n' && upper.toLowerCase() === 'n') {
     alert("You must choose upper or lower case letters.");
     newPass = [];
-    generatePassword();
+    return;
   } else {
     alert("Incorrect value entered");
     newPass = [];
-    generatePassword();
+    return;
   }
   
 // Once all password characters are established, the array items will be randomized into a new array.
@@ -151,17 +146,3 @@ function generatePassword() {
   
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
-
-
-
-
-
-
-
-
-// WHEN I answer each prompt
-// THEN my input should be validated and at least one character type should be selected
-// WHEN all prompts are answered
-// THEN a password is generated that matches the selected criteria
-// WHEN the password is generated
-// THEN the password is either displayed in an alert or written to the page
